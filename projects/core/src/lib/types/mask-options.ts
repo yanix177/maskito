@@ -5,6 +5,7 @@ import type {MaskitoPlugin} from './plugin';
 
 export interface MaskitoOptions {
     readonly mask: MaskitoMask;
+    readonly parser: (value: any) => any;
     readonly preprocessors?: readonly MaskitoPreprocessor[];
     readonly postprocessors?: readonly MaskitoPostprocessor[];
     readonly plugins?: readonly MaskitoPlugin[];

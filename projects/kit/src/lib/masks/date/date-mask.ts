@@ -12,15 +12,17 @@ import {
 import type {MaskitoDateMode} from '../../types';
 
 export function maskitoDateOptionsGenerator({
-    mode,
-    separator = '.',
-    max,
-    min,
-}: {
+                                                mode,
+                                                separator = '.',
+                                                max,
+                                                min,
+                                                parser,
+                                            }: {
     mode: MaskitoDateMode;
     separator?: string;
     max?: Date;
     min?: Date;
+    parser?: (value: any) => any;
 }): Required<MaskitoOptions> {
     const dateModeTemplate = mode.split('/').join(separator);
 
@@ -56,5 +58,6 @@ export function maskitoDateOptionsGenerator({
                 dateSegmentSeparator: separator,
             }),
         ],
+        parser
     };
 }

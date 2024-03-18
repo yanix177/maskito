@@ -2,11 +2,7 @@ import type {OnChanges, OnDestroy} from '@angular/core';
 import {Directive, ElementRef, inject, Input, NgZone} from '@angular/core';
 import {DefaultValueAccessor} from '@angular/forms';
 import type {MaskitoElementPredicate, MaskitoOptions} from '@maskito/core';
-import {
-    Maskito,
-    MASKITO_DEFAULT_ELEMENT_PREDICATE,
-    maskitoTransform,
-} from '@maskito/core';
+import {Maskito, MASKITO_DEFAULT_ELEMENT_PREDICATE, maskitoTransform,} from '@maskito/core';
 
 @Directive({standalone: true, selector: '[maskito]'})
 export class MaskitoDirective implements OnDestroy, OnChanges {
@@ -25,6 +21,7 @@ export class MaskitoDirective implements OnDestroy, OnChanges {
 
         if (accessor) {
             const original = accessor.writeValue.bind(accessor);
+            const originalOnChange = accessor.onChange.bind(accessor);
 
             accessor.writeValue = (value: unknown) => {
                 original(
@@ -33,7 +30,16 @@ export class MaskitoDirective implements OnDestroy, OnChanges {
                         : value,
                 );
             };
+            accessor.onChange =
         }
+    }
+
+    registerOnChange(onChange: (value: T | null) => void): void {
+        this.onChange = onChange;
+        const parser = this.inputMaskOptions?.parser;
+        this.onInput = (value) => {
+            this.onChange(parser && value ? parser(value) : value);
+        };
     }
 
     public async ngOnChanges(): Promise<void> {
